@@ -12,15 +12,34 @@ def predict_digit(image):
     image_array = np.array(image) / 255.0
     image_array = image_array.reshape(1, 28, 28, 1)
 
-    prediction = model.predict(image_array)
-    return int(np.argmax(prediction))
+    prediction = model.predict(image)
+    probs = prediction[0]
 
-# Gradio UI
-interface = gr.Interface(
-    fn=predict_digit,
-    inputs=gr.Image(type="pil"),
-    outputs="label",
-    title="🧠 MNIST Digit Recognition"
-)
+    return {str(i): float(probs[i]) for i in range(10)}
 
-interface.launch()
+# Custom CSS for better UI
+custom_css = """
+body {background-color: #0f172a;}
+h1 {text-align: center; color: #38bdf8;}
+.gr-button {background: #2563eb; color: white; border-radius: 8px;}
+"""
+
+# UI Layout
+with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
+    
+    gr.Markdown("""
+    # 🧠 Handwritten Digit Recognition  
+    ### Upload an image and let the AI predict the digit (0–9)
+    """)
+
+    with gr.Row():
+        image_input = gr.Image(type="pil", label="📤 Upload Digit Image")
+        output = gr.Label(label="🔮 Prediction")
+
+    submit_btn = gr.Button("🚀 Predict")
+
+    submit_btn.click(fn=predict_digit, inputs=image_input, outputs=output)
+
+    gr.Markdown("💡 Tip: Use white digit on black background for best results")
+
+demo.launch()
