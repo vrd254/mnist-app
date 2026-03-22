@@ -9,10 +9,11 @@ model = load_model("mnist_cnn_model.h5")
 def predict_digit(image):
     image = image.convert("L")
     image = image.resize((28, 28))
+    
     image_array = np.array(image) / 255.0
     image_array = image_array.reshape(1, 28, 28, 1)
 
-    prediction = model.predict(image)
+    prediction = model.predict(image_array)  # ✅ FIXED
     probs = prediction[0]
 
     return {str(i): float(probs[i]) for i in range(10)}
