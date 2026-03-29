@@ -47,5 +47,4 @@ with gr.Blocks() as demo:
 
     gr.Markdown("💡 Tip: Use white digit on black background for best results")
 
-# IMPORTANT: pass css + theme here (fixes warning)
 demo.launch(css=custom_css, theme=gr.themes.Soft())
